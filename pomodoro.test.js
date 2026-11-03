@@ -8,7 +8,7 @@ const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
 const nucleo = html.match(/<script id="nucleo">([\s\S]*?)<\/script>/)[1];
 const contexto = vm.createContext({});
 vm.runInContext(nucleo, contexto);
-const { siguienteFase, formatearTiempo, resumirHoy } = contexto;
+const { siguienteFase, formatearTiempo, resumirHoy, historialACSV } = contexto;
 
 test("alterna concentración y descanso corto", () => {
   assert.strictEqual(siguienteFase("trabajo", 1), "descanso");
@@ -31,6 +31,15 @@ test("formatea el tiempo y nunca muestra valores negativos", () => {
   assert.strictEqual(formatearTiempo(59.2), "01:00");
   assert.strictEqual(formatearTiempo(5), "00:05");
   assert.strictEqual(formatearTiempo(-3), "00:00");
+});
+
+test("exporta el historial a CSV", () => {
+  const fin = Date.UTC(2026, 10, 3, 18, 30);
+  assert.strictEqual(historialACSV([]), "fin,minutos\r\n");
+  assert.strictEqual(
+    historialACSV([{ fin: fin, minutos: 25 }]),
+    "fin,minutos\r\n2026-11-03T18:30:00.000Z,25\r\n"
+  );
 });
 
 test("el resumen cuenta solo las sesiones de hoy", () => {

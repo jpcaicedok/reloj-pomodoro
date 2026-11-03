@@ -6,7 +6,7 @@ Temporizador pomodoro en un solo archivo HTML, sin instalación ni librerías. S
 
 - 25 minutos de concentración y 5 de descanso.
 - Un descanso largo de 15 minutos cada cuatro sesiones.
-- El historial se guarda solo en tu navegador.
+- El historial se guarda solo en tu navegador y puedes exportarlo a CSV.
 - La cuenta atrás usa la hora real, así que sigue siendo exacta aunque la pestaña quede en segundo plano.
 
 ## Uso
