@@ -40,6 +40,7 @@
     <p id="resumen"></p>
     <ul id="lista"></ul>
     <div class="acciones">
+      <button id="exportar" type="button">Exportar a CSV</button>
       <button id="borrar" type="button">Borrar historial</button>
     </div>
   </main>
@@ -65,6 +66,11 @@
       const sesiones = historial.filter((s) => new Date(s.fin).toDateString() === hoy);
       const minutos = sesiones.reduce((suma, s) => suma + s.minutos, 0);
       return { sesiones: sesiones.length, minutos: minutos };
+    }
+
+    function historialACSV(historial) {
+      const filas = historial.map((s) => new Date(s.fin).toISOString() + "," + s.minutos);
+      return ["fin,minutos"].concat(filas).join("\r\n") + "\r\n";
     }
   </script>
 
@@ -159,6 +165,15 @@
 
     el("saltar").addEventListener("click", () => cambiarFase(siguienteFase(fase, completados)));
     el("reiniciar").addEventListener("click", () => cambiarFase(fase));
+    el("exportar").addEventListener("click", () => {
+      const url = URL.createObjectURL(new Blob([historialACSV(historial)], { type: "text/csv" }));
+      const enlace = document.createElement("a");
+      enlace.href = url;
+      enlace.download = "historial-pomodoro.csv";
+      enlace.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
     el("borrar").addEventListener("click", () => {
       historial = [];
       guardar();
